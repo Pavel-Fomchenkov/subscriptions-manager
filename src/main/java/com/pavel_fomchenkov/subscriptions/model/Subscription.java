@@ -1,6 +1,6 @@
 package com.pavel_fomchenkov.subscriptions.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,7 +23,7 @@ public class Subscription {
     @Column(name = "description", unique = true, nullable = false)
     private String description;
 
-    @JsonProperty("users")
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "subscriptions")
     private Collection<User> users = new HashSet<>();
 }

@@ -21,7 +21,7 @@ public class User {
     private String username;
 
     @JsonProperty("subscriptions")
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_subscriptions", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "subscription_id"))
     private Collection<Subscription> subscriptions = new HashSet<>();
 }

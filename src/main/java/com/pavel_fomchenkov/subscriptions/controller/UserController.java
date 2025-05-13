@@ -1,10 +1,17 @@
 package com.pavel_fomchenkov.subscriptions.controller;
 
+import com.pavel_fomchenkov.subscriptions.dto.UserDTO;
+import com.pavel_fomchenkov.subscriptions.model.Subscription;
+import com.pavel_fomchenkov.subscriptions.model.User;
 import com.pavel_fomchenkov.subscriptions.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/users")
@@ -13,16 +20,59 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService service;
 //    CREATE
+
+    /**
+     * Создание нового пользователя
+     *
+     * @return пользователь
+     */
+    @PostMapping()
+    @Operation(summary = "Создание нового пользователя")
+    public ResponseEntity<UserDTO> createTask(@RequestBody UserDTO userDTO) {
+        UserDTO newUser = service.create(userDTO);
+        return ResponseEntity.ok(newUser);
+    }
 //    READ
+    @GetMapping("/{id}")
+    @Operation(summary = "Получение данных пользователя по id")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        User user = service.getById(id);
+        return ResponseEntity.ok(user);
+    }
+
 //    UPDATE
+    @PutMapping("/{id}")
+    @Operation(summary = "Обновление данных пользователя")
+    public ResponseEntity<User> edit(@PathVariable Long id, @RequestBody User user) {
+        return ResponseEntity.ok(service.edit(id, user));
+    }
+
 //    DELETE
+//    TODO переделать метод чтобы он также удалял подписки пользователя
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Удаление пользователя")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/subscriptions")
+    @Operation(summary = "Добавление подписки пользователю")
+    public ResponseEntity<User> addSubscription(@PathVariable Long id, @RequestBody Subscription subscription) {
+        return ResponseEntity.ok(service.addSubscription(id, subscription));
+    }
+
+    @GetMapping("/{id}/subscriptions")
+    @Operation(summary = "Получение списка подписок пользователя")
+    public ResponseEntity<Collection<Subscription>> getSubscriptions(@PathVariable(name = "id") Long user_id) {
+        return ResponseEntity.ok(service.getSubscriptions(user_id));
+    }
+    @DeleteMapping("/{id}/subscriptions/{sub_id}")
+    @Operation(summary = "Удаление подписки у пользователя")
+    public ResponseEntity<Void> deleteSubscription(@PathVariable Long id, @PathVariable Long sub_id) {
+        service.deleteSubscription(id, sub_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 
-/*      POST /users - создать пользователя – передаем User
-        GET /users/{id} - получить информацию о пользователе – передаем id
-        PUT /users/{id} - обновить пользователя – передаем User и id
-        DELETE /users/{id} - удалить пользователя – передаем id
-        POST /users/{id}/subscriptions - добавить подписку – передаем id пользователя и Sub
-        GET /users/{id}/subscriptions - получить подписки пользователя – передаем id польз-я
-        DELETE /users/{id}/subscriptions/{sub_id} - удалить подписку – передаем 2 id
-        GET /subscriptions/top - получить ТОП-3 популярных подписок – ничего не передаем*/
+
