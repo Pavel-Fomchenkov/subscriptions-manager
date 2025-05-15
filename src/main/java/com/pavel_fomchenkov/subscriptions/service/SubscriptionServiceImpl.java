@@ -8,6 +8,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
@@ -47,5 +49,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             subscription.setUserCount(subscription.getUserCount() - 1);
         }
         repository.save(subscription);
+    }
+
+    @Override
+    public List<Subscription> top3() {
+        return repository.top3();
     }
 }

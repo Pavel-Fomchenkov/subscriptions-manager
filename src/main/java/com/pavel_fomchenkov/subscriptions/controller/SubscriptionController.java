@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController()
 @RequestMapping("/subscriptions")
 @RequiredArgsConstructor
@@ -29,6 +31,11 @@ public class SubscriptionController {
         Subscription subscription = service.getById(id);
         return ResponseEntity.ok(subscription);
     }
-//   TODO          GET /subscriptions/top - получить ТОП-3 популярных подписок – ничего не передаем*/
+
+    @GetMapping("/subscriptions/top")
+    @Operation(summary = "Получени 3 наиболее популярных подписок")
+    public ResponseEntity<List<Subscription>> top3() {
+        return ResponseEntity.ok(service.top3());
+    }
 
 }
