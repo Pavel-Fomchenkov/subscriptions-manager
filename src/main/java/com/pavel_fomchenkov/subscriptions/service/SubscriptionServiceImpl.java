@@ -7,6 +7,7 @@ import com.pavel_fomchenkov.subscriptions.repository.SubscriptionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,15 +18,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionMapper mapper;
 
     @Override
+    @Transactional
     public SubscriptionDTO create(SubscriptionDTO subscriptionDTO) {
         Subscription newSubscription = repository.save(mapper.mapDTOToSubscription(subscriptionDTO));
         return mapper.mapToSubscriptionDTO(newSubscription);
-    }
-
-    @Override
-    public void delete(Long user_id, Long sub_id) {
-//        Subscription subscription = repository.findById(sub_id).orElseThrow();
-//        repository.findById(sub_id).ifPresent(sub -> sub.);
     }
 
     @Override
@@ -34,6 +30,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    @Transactional
     public void increaseUserCount(Long id) {
         Subscription subscription = getById(id);
         subscription.setUserCount(subscription.getUserCount() + 1);
@@ -41,6 +38,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    @Transactional
     public void decreaseUserCount(Long id) {
         Subscription subscription = getById(id);
         if (subscription.getUserCount() <= 1) {

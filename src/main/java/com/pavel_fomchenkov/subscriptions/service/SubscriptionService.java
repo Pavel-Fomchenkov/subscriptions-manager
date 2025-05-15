@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface SubscriptionService {
     SubscriptionDTO create(SubscriptionDTO subscriptionDTO);
-    void delete(Long user_id, Long sub_id);
 
     Subscription getById(Long id);
 

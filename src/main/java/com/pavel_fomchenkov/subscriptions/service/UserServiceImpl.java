@@ -8,6 +8,7 @@ import com.pavel_fomchenkov.subscriptions.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final SubscriptionService subscriptionService;
 
     @Override
+    @Transactional
     public UserDTO create(UserDTO userDTO) {
         User newUser = repository.save(mapper.mapDTOToUser(userDTO));
         return mapper.mapToUserDTO(newUser);
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User edit(Long id, User user) {
         User userFromBD = getById(id);
         userFromBD.setUsername(user.getUsername());
@@ -57,12 +60,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         getById(id).getSubscriptions().forEach(s -> subscriptionService.decreaseUserCount(s.getId()));
         repository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public User addSubscription(Long id, Subscription subscription) {
         if (subscription != null) {
             User userFromBD = getById(id);
@@ -82,6 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteSubscription(Long id, Long subId) {
         User userFromBD = getById(id);
         Collection<Subscription> subscriptions = userFromBD.getSubscriptions();
