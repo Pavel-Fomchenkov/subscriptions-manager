@@ -30,4 +30,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public Subscription getById(Long id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Subscription with id " + id + " was not found."));
     }
+
+    @Override
+    public void increaseUserCount(Long id) {
+        Subscription subscription = getById(id);
+        subscription.setUserCount(subscription.getUserCount() + 1);
+        repository.save(subscription);
+    }
+
+    @Override
+    public void decreaseUserCount(Long id) {
+        Subscription subscription = getById(id);
+        if (subscription.getUserCount() <= 1) {
+            subscription.setUserCount(0);
+        } else {
+            subscription.setUserCount(subscription.getUserCount() - 1);
+        }
+        repository.save(subscription);
+    }
 }

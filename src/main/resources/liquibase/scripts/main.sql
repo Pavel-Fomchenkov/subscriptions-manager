@@ -26,3 +26,7 @@ CREATE TABLE user_subscriptions (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (subscription_id) REFERENCES subscriptions(id)
 );
+
+-- changeset pavel-fomchenkov:2
+ALTER TABLE public.subscriptions ADD COLUMN user_count INTEGER NOT NULL DEFAULT 0;
+CREATE INDEX idx_subscription_user_count ON public.subscriptions(user_count);

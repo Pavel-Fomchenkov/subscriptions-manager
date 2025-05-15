@@ -8,4 +8,8 @@ public interface SubscriptionService {
     void delete(Long user_id, Long sub_id);
 
     Subscription getById(Long id);
+
+    void increaseUserCount(Long id);
+
+    void decreaseUserCount(Long id);
 }

@@ -26,4 +26,7 @@ public class Subscription {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "subscriptions")
     private Collection<User> users = new HashSet<>();
+
+    @Column(name = "user_count", nullable = false)
+    private int userCount = 0;
 }
