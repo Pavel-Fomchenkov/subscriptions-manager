@@ -7,6 +7,8 @@ import com.pavel_fomchenkov.subscriptions.model.User;
 import com.pavel_fomchenkov.subscriptions.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final UserMapper mapper;
     private final SubscriptionService subscriptionService;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     @Transactional
@@ -30,7 +33,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id " + id + " was not found."));
+        try {
+            return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id " + id + " was not found."));
+        } catch (EntityNotFoundException e) {
+            logger.error("Ошибка получения сущности, {}", e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Override
@@ -69,15 +77,20 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User addSubscription(Long id, Subscription subscription) {
-        if (subscription != null) {
-            User userFromBD = getById(id);
-            if (!userFromBD.getSubscriptions().contains(subscription)) {
-                subscriptionService.increaseUserCount(subscription.getId());
+        try {
+            if (subscription != null) {
+                User userFromBD = getById(id);
+                if (!userFromBD.getSubscriptions().contains(subscription)) {
+                    subscriptionService.increaseUserCount(subscription.getId());
+                }
+                userFromBD.getSubscriptions().add(subscription);
+                return repository.save(userFromBD);
+            } else {
+                throw new RuntimeException("Добавляемая подписка не может быть null");
             }
-            userFromBD.getSubscriptions().add(subscription);
-            return repository.save(userFromBD);
-        } else {
-            throw new RuntimeException("Добавляемая подписка не может быть null");
+        } catch (RuntimeException e) {
+            logger.error("Ошибка добавления подписки, {}", e.getMessage(), e);
+            throw e;
         }
     }
 

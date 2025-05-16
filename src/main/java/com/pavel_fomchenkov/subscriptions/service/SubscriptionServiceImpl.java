@@ -6,6 +6,8 @@ import com.pavel_fomchenkov.subscriptions.model.Subscription;
 import com.pavel_fomchenkov.subscriptions.repository.SubscriptionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository repository;
     private final SubscriptionMapper mapper;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     @Transactional
@@ -26,7 +29,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public Subscription getById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Subscription with id " + id + " was not found."));
+        try {
+            return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Subscription with id " + id + " was not found."));
+        } catch (EntityNotFoundException e) {
+            logger.error("Ошибка получения сущности, {}", e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Override
