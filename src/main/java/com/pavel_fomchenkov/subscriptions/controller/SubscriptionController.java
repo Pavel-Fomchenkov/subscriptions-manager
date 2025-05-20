@@ -27,7 +27,7 @@ public class SubscriptionController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение подписки по id")
-    public ResponseEntity<Subscription> getSubscription(@PathVariable Long id) {
+    public ResponseEntity<Subscription> getSubscription(@PathVariable(name = "id") Long id) {
         Subscription subscription = service.getById(id);
         return ResponseEntity.ok(subscription);
     }

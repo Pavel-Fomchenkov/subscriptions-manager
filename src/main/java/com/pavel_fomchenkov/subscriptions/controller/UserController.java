@@ -35,7 +35,7 @@ public class UserController {
 //    READ
     @GetMapping("/{id}")
     @Operation(summary = "Получение данных пользователя по id")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
+    public ResponseEntity<User> getUser(@PathVariable(name = "id") Long id) {
         User user = service.getById(id);
         return ResponseEntity.ok(user);
     }
@@ -43,7 +43,7 @@ public class UserController {
 //    UPDATE
     @PutMapping("/{id}")
     @Operation(summary = "Обновление данных пользователя")
-    public ResponseEntity<User> edit(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<User> edit(@PathVariable(name = "id") Long id, @RequestBody User user) {
         return ResponseEntity.ok(service.edit(id, user));
     }
 
@@ -51,14 +51,14 @@ public class UserController {
 //    TODO переделать метод чтобы он также удалял подписки пользователя
     @DeleteMapping("/{id}")
     @Operation(summary = "Удаление пользователя")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{id}/subscriptions")
     @Operation(summary = "Добавление подписки пользователю")
-    public ResponseEntity<User> addSubscription(@PathVariable Long id, @RequestBody Subscription subscription) {
+    public ResponseEntity<User> addSubscription(@PathVariable(name = "id") Long id, @RequestBody Subscription subscription) {
         return ResponseEntity.ok(service.addSubscription(id, subscription));
     }
 
@@ -69,7 +69,7 @@ public class UserController {
     }
     @DeleteMapping("/{id}/subscriptions/{sub_id}")
     @Operation(summary = "Удаление подписки у пользователя")
-    public ResponseEntity<Void> deleteSubscription(@PathVariable Long id, @PathVariable Long sub_id) {
+    public ResponseEntity<Void> deleteSubscription(@PathVariable(name = "id") Long id, @PathVariable(name = "sub_id") Long sub_id) {
         service.deleteSubscription(id, sub_id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
