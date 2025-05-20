@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    volumes:
+      - log:/var/log/subscription-manager
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/subscriptions
+      SPRING_DATASOURCE_USERNAME: Subscriber
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: false
+      LOG_PATH: /var/log/subscription-manager
+
+  db:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: subscriptions
+      POSTGRES_USER: Subscriber
+      POSTGRES_PASSWORD: password
+volumes:
+  pgdata:
+  log:
