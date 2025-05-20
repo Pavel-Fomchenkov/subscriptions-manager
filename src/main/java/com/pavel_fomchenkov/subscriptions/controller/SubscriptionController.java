@@ -4,6 +4,8 @@ import com.pavel_fomchenkov.subscriptions.dto.SubscriptionDTO;
 import com.pavel_fomchenkov.subscriptions.model.Subscription;
 import com.pavel_fomchenkov.subscriptions.service.SubscriptionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,8 @@ public class SubscriptionController {
     private final SubscriptionService service;
 
     @PostMapping
-    @Operation(summary = "Добавление новой подписки в базу данных")
+    @Operation(summary = "Добавление новой подписки в базу данных",
+    requestBody = @RequestBody(description = "Укажите наименование и описание подписки"))
     public ResponseEntity<SubscriptionDTO> create(@RequestBody SubscriptionDTO subscriptionDTO) {
         SubscriptionDTO newSubscription = service.create(subscriptionDTO);
         return ResponseEntity.ok(newSubscription);
@@ -27,7 +30,7 @@ public class SubscriptionController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение подписки по id")
-    public ResponseEntity<Subscription> getSubscription(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Subscription> getSubscription(@Parameter(description = "Идентификатор подписки") @PathVariable(name = "id") Long id) {
         Subscription subscription = service.getById(id);
         return ResponseEntity.ok(subscription);
     }
