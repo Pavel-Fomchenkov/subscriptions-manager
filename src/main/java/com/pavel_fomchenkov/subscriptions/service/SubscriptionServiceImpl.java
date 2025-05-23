@@ -4,7 +4,6 @@ import com.pavel_fomchenkov.subscriptions.dto.SubscriptionDTO;
 import com.pavel_fomchenkov.subscriptions.mapper.SubscriptionMapper;
 import com.pavel_fomchenkov.subscriptions.model.Subscription;
 import com.pavel_fomchenkov.subscriptions.repository.SubscriptionRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +30,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public Subscription getById(Long id) {
         try {
-            return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Subscription with id " + id + " was not found."));
-        } catch (EntityNotFoundException e) {
-            logger.error("Ошибка получения сущности, {}", e.getMessage(), e);
+            return repository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            logger.error("Ошибка получения сущности, Subscription with id {} was not found.", id);
             throw e;
         }
     }

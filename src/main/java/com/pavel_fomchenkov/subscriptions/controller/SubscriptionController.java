@@ -5,7 +5,6 @@ import com.pavel_fomchenkov.subscriptions.model.Subscription;
 import com.pavel_fomchenkov.subscriptions.service.SubscriptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class SubscriptionController {
 
     @PostMapping
     @Operation(summary = "Добавление новой подписки в базу данных",
-    requestBody = @RequestBody(description = "Укажите наименование и описание подписки"))
+    requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Укажите наименование и описание подписки"))
     public ResponseEntity<SubscriptionDTO> create(@RequestBody SubscriptionDTO subscriptionDTO) {
         SubscriptionDTO newSubscription = service.create(subscriptionDTO);
         return ResponseEntity.ok(newSubscription);
@@ -36,7 +35,7 @@ public class SubscriptionController {
     }
 
     @GetMapping("/subscriptions/top")
-    @Operation(summary = "Получени 3 наиболее популярных подписок")
+    @Operation(summary = "Получение 3 наиболее популярных подписок")
     public ResponseEntity<List<Subscription>> top3() {
         return ResponseEntity.ok(service.top3());
     }
