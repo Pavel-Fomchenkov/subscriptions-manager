@@ -5,7 +5,6 @@ import com.pavel_fomchenkov.subscriptions.mapper.UserMapper;
 import com.pavel_fomchenkov.subscriptions.model.Subscription;
 import com.pavel_fomchenkov.subscriptions.model.User;
 import com.pavel_fomchenkov.subscriptions.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +34,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Long id) {
         try {
-            return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id " + id + " was not found."));
-        } catch (EntityNotFoundException e) {
-            logger.error("Ошибка получения сущности, {}", e.getMessage(), e);
+            return repository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            logger.error("Ошибка получения сущности, User with id {} was not found.", id);
             throw e;
         }
     }

@@ -6,7 +6,6 @@ import com.pavel_fomchenkov.subscriptions.model.User;
 import com.pavel_fomchenkov.subscriptions.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,8 +24,8 @@ public class UserController {
     //    CREATE
     @PostMapping()
     @Operation(summary = "Создание нового пользователя",
-            requestBody = @RequestBody(description = "Укажите имя пользователя"))
-    public ResponseEntity<UserDTO> createTask(@RequestBody UserDTO userDTO) {
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Укажите имя пользователя"))
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO newUser = service.create(userDTO);
         return ResponseEntity.ok(newUser);
     }
@@ -42,7 +41,7 @@ public class UserController {
     //    UPDATE
     @PutMapping("/{id}")
     @Operation(summary = "Обновление данных пользователя",
-            requestBody = @RequestBody(description = "Нужны полные данные пользователя, старые будут удалены")
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Нужны полные данные пользователя, старые будут удалены")
     )
     public ResponseEntity<User> edit(@Parameter(description = "Идентификатор пользователя") @PathVariable(name = "id") Long id, @RequestBody User user) {
         return ResponseEntity.ok(service.edit(id, user));
@@ -58,7 +57,7 @@ public class UserController {
 
     @PostMapping("/{id}/subscriptions")
     @Operation(summary = "Добавление подписки пользователю",
-            requestBody = @RequestBody(description = "Достаточно id подписки")
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Достаточно id подписки")
     )
     public ResponseEntity<User> addSubscription(@Parameter(description = "Идентификатор пользователя") @PathVariable(name = "id") Long id, @RequestBody Subscription subscription) {
         return ResponseEntity.ok(service.addSubscription(id, subscription));
