@@ -13,7 +13,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_JPA_SHOW_SQL: false
-      LOG_PATH: /var/log/subscription-manager
+      LOG_PATH: /var/log/subscriptions-manager
 
   db:
     image: postgres:latest
